@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart - Local Storage</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        li:hover {
+            background-color: #f0f0f0;
+        }
+
+        p {
+            font-size: 18px;
+            color: #666;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Available Items</h1>
+    <script>
+        // Array of available items
+        const availableItems = ['Shampoo', 'Soap', 'Sponge', 'Water'];
+
+        // Check if localStorage is available
+        function isLocalStorageAvailable() {
+            try {
+                localStorage.setItem('test', 'test');
+                localStorage.removeItem('test');
+                return true;
+            } catch(e) {
+                return false;
+            }
+        }
+
+        // Add item to cart
+        function addItemToCart(item) {
+            localStorage.setItem(item, 'true');
+            // Update cart display after adding item
+            displayCart();
+        }
+
+        // Create store display
+        function createStore() {
+            const ul = document.createElement('ul');
+            
+            availableItems.forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = item;
+                li.onclick = () => addItemToCart(item);
+                ul.appendChild(li);
+            });
+
+            document.body.appendChild(ul);
+        }
+
+        // Display cart contents
+        function displayCart() {
+            // Remove existing cart message if any
+            const existingMessage = document.querySelector('.cart-message');
+            if (existingMessage) {
+                existingMessage.remove();
+            }
+
+            let itemCount = 0;
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (availableItems.includes(key)) {
+                    itemCount++;
+                }
+            }
+
+            if (itemCount > 0) {
+                const p = document.createElement('p');
+                p.className = 'cart-message';
+                p.textContent = `You previously had ${itemCount} items in your cart`;
+                document.body.appendChild(p);
+            }
+        }
+
+        // Initialize the application
+        window.onload = function() {
+            if (!isLocalStorageAvailable()) {
+                alert('Sorry, your browser does not support Web storage. Try again with a better one');
+            } else {
+                createStore();
+                displayCart();
+            }
+        };
+    </script>
+</body>
+</html> 

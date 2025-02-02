@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login to the website</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        h1, h2 {
+            font-size: 48px;
+            margin-bottom: 30px;
+        }
+
+        .login-form {
+            display: none;
+        }
+
+        .login-section {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 40px;
+        }
+
+        input {
+            padding: 8px;
+            font-size: 18px;
+            width: 300px;
+            margin-right: 10px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            padding: 8px 16px;
+            font-size: 18px;
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .logout-link {
+            font-weight: normal;
+            font-style: italic;
+            margin-left: 10px;
+            text-decoration: none;
+            color: black;
+        }
+
+        #welcome-message {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="welcome-message"></div>
+    
+    <div id="login-form" class="login-form">
+        <h2>Login to the website</h2>
+        <div class="login-section">
+            <input type="text" id="firstname" placeholder="Firstname">
+            <input type="text" id="email" placeholder="Email">
+            <button onclick="setCookies()">Log me in</button>
+        </div>
+    </div>
+
+    <script>
+        function setCookies() {
+            const firstname = document.getElementById('firstname').value;
+            const email = document.getElementById('email').value;
+
+            if (firstname && email) {
+                const expirationDate = new Date();
+                expirationDate.setTime(expirationDate.getTime() + (10 * 24 * 60 * 60 * 1000));
+                const expires = "expires=" + expirationDate.toUTCString();
+
+                document.cookie = `firstname=${firstname}; ${expires}; path=/`;
+                document.cookie = `email=${email}; ${expires}; path=/`;
+
+                showWelcomeMessageOrForm();
+            }
+        }
+
+        function getCookie(name) {
+            const cookies = document.cookie.split(';');
+            for (let cookie of cookies) {
+                cookie = cookie.trim();
+                if (cookie.startsWith(name + '=')) {
+                    return cookie.substring(name.length + 1);
+                }
+            }
+            return '';
+        }
+
+        function showForm() {
+            const welcomeMessage = document.getElementById('welcome-message');
+            welcomeMessage.style.display = 'none';
+            
+            const loginForm = document.getElementById('login-form');
+            loginForm.style.display = 'block';
+        }
+
+        function hideForm() {
+            const loginForm = document.getElementById('login-form');
+            loginForm.style.display = 'none';
+        }
+
+        function deleteCookiesAndShowForm() {
+            document.cookie = "firstname=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            document.cookie = "email=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            showForm();
+        }
+
+        function showWelcomeMessageOrForm() {
+            const firstname = getCookie('firstname');
+            
+            if (firstname) {
+                const welcomeMessage = document.getElementById('welcome-message');
+                welcomeMessage.innerHTML = `
+                    <h1>
+                        Welcome: ${firstname}
+                        <a href="#" onclick="deleteCookiesAndShowForm()" class="logout-link">(logout)</a>
+                    </h1>
+                `;
+                welcomeMessage.style.display = 'block';
+                hideForm();
+            } else {
+                showForm();
+            }
+        }
+
+        // Vérifier le statut de connexion au chargement de la page
+        window.onload = function() {
+            showWelcomeMessageOrForm();
+        }
+    </script>
+</body>
+</html> 

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login to the website</title>
+    <style>
+        /* Le même CSS que précédemment */
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        /* ... reste du CSS ... */
+    </style>
+</head>
+<body>
+    <h1>Login to the website</h1>
+    
+    <div class="login-section">
+        <input type="text" id="firstname" placeholder="Firstname">
+        <input type="text" id="email" placeholder="Email">
+        <button onclick="setCookies()">Log me in</button>
+    </div>
+
+    <h2>Cookies</h2>
+    <button onclick="showCookies()">Show the cookies</button>
+
+    <script>
+        function setCookies() {
+            // Récupérer les valeurs des inputs
+            const firstname = document.getElementById('firstname').value;
+            const email = document.getElementById('email').value;
+
+            // Créer une date d'expiration (10 jours à partir de maintenant)
+            const expirationDate = new Date();
+            expirationDate.setTime(expirationDate.getTime() + (10 * 24 * 60 * 60 * 1000));
+            
+            // Convertir la date en format UTC string
+            const expires = "expires=" + expirationDate.toUTCString();
+
+            // Définir les cookies avec date d'expiration et chemin
+            document.cookie = `firstname=${firstname}; ${expires}; path=/`;
+            document.cookie = `email=${email}; ${expires}; path=/`;
+        }
+
+        function showCookies() {
+            const p = document.createElement('p');
+            p.innerHTML = `Cookies: ${document.cookie}`;
+            document.body.appendChild(p);
+        }
+    </script>
+</body>
+</html> 
